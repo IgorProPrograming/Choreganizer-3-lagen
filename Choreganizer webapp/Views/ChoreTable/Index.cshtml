@@ -1,0 +1,51 @@
+﻿@using Choreganizer_webapp.Controllers
+@using LOGIC
+@using LOGIC.Models
+
+@model List<Chore>
+@{
+	ViewData["Title"] = "Chore Table";
+}
+
+<div>
+    <div></div>
+    <table>
+        <tr>
+            <th>
+                Chore
+            </th>
+            <th>
+                Remove
+            </th>
+        </tr>
+        @foreach (var m in Model)
+        {
+            <tr>
+                <th>
+                    @m.ChoreName
+                    @m.Id
+                </th>
+                <th>
+                    @if (m.Finished)
+                    {
+                        <div class="Checked">
+                        @Html.ActionLink("Checked", "ToggleState", new { choreId = @m.Id, lastState = m.Finished })
+                        </div>
+                    } else 
+                    {
+                        <div class="UnChecked">
+                        @Html.ActionLink("Unchecked", "ToggleState", new { choreId = @m.Id, lastState = m.Finished })
+                        </div>
+                    }
+                    @Html.ActionLink("Delete", "Remove", new { choreId = @m.Id })
+                    @Html.ActionLink("Edit", "Edit", new { choreId = @m.Id })
+                </th>
+            </tr>
+        }
+    </table>
+
+    <form method="post" asp-action="Add" asp-controller="ChoreTable">
+		<input type="text" name="choreName" />
+		<input type="submit" value="Add Chore" />
+    </form>
+</div>
