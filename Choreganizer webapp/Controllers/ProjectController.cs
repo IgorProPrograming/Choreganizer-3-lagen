@@ -1,7 +1,8 @@
-﻿using LOGIC;
-using LOGIC.Interfaces;
+﻿using LOGIC.Interfaces;
 using LOGIC.Models;
+using LOGIC;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace Choreganizer_webapp.Controllers
 {
