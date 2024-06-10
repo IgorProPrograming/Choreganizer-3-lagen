@@ -13,9 +13,10 @@ namespace Choreganizer_webapp.Controllers
         public ChoreTableController(IConfiguration configuration, IChoreRepository choreRepository)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
-            _choreRepository = choreRepository;
+            _choreRepository = new DAL.ChoreRepository();
             _choreService = new ChoreService(_choreRepository, _connectionString);
         }
+
 
         public IActionResult Index()
         {
@@ -34,7 +35,18 @@ namespace Choreganizer_webapp.Controllers
         public ActionResult Add(string choreName)
         {
             int projectId = int.Parse(HttpContext.Session.GetString("CurrentProjectId"));
-            _choreService.AddChore(choreName, projectId, _connectionString);
+            string message = _choreService.AddChore(choreName, projectId, _connectionString);
+            switch (message)
+            {
+                case "Chore added":
+                    break;
+                case "Chore name is too long":
+                    TempData["Message"] = "Chore name is too long";
+                    break;
+                case "Chore name cannot be empty":
+                    TempData["Message"] = "Chore name cannot be empty";
+                    break;
+            }
             return RedirectToAction("Index");
         }
 

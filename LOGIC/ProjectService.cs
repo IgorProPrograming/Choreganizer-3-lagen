@@ -33,14 +33,23 @@ namespace LOGIC
             repository.RemoveProject(ProjectId, connectionString);
         }
 
-        public void AddProject(string projectName, int ownerId, string connectionString)
+        public string AddProject(string projectName, int ownerId, string connectionString)
         {
+            if (projectName == null || projectName == "")
+            {
+                return "Project name cannot be empty";
+            } else if (projectName.Length > 100)
+            {
+                return "Project name cannot be longer than 100 characters";
+            } 
+
             repository.AddProject(
                 new ProjectDTO()
                 {
                     OwnerId = ownerId,
                     ProjectName = projectName
                 }, connectionString);
+            return null;
         }
     }
 }

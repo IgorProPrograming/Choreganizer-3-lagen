@@ -1,5 +1,6 @@
 ﻿using LOGIC.Models;
 using LOGIC.DTOs;
+using System.ComponentModel.DataAnnotations;
 
 namespace LOGIC
 {
@@ -28,9 +29,25 @@ namespace LOGIC
             repository.RemoveChore(choreId, _connectionString);
         }
 
-        public void AddChore(string choreName, int projectId, string _connectionString)
+        public string AddChore(string choreName, int projectId, string _connectionString)
         {
-            repository.AddChore(choreName, projectId, _connectionString);
+            if (choreName != null)
+            {
+                if (choreName.Length < 500)
+                {
+                    repository.AddChore(choreName, projectId, _connectionString);
+                    return "Chore added";
+                } 
+                else
+                {
+                    return "Chore name is too long";
+                }
+            }
+            else 
+            { 
+                return "Chore name cannot be empty";
+            }
+            
         }
 
         public void ToggleChoreStatus(int choreId, bool lastState, string _connectionString)

@@ -46,7 +46,16 @@ namespace Choreganizer_webapp.Controllers
         public IActionResult Add(string projectName)
         {
             int userId = int.Parse(HttpContext.Session.GetString("UserId"));
-            _projectService.AddProject(projectName, userId, _connectionString);
+            string message = _projectService.AddProject(projectName, userId, _connectionString);
+            switch (message)
+            {
+                case "Project name cannot be empty":
+                    TempData["Error"] = "Project name cannot be empty";
+                    break;
+                case "Project name cannot be longer than 100 characters":
+                    TempData["Error"] = "Project name cannot be longer than 100 characters";
+                    break;
+            }
             return RedirectToAction("Index");
         }
     }
