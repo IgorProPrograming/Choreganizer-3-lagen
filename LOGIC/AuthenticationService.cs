@@ -44,6 +44,19 @@ namespace LOGIC
             }
         }
 
+        public bool CheckIfUserExists(string username, string _connectionString)
+        {
+            UserProfileDTO userProfileDTO = new UserProfileDTO();
+            userProfileDTO.Username = username;
+            return _authenticationRepository.CheckIfUserExists(userProfileDTO, _connectionString);
+        }
+        
+        public string GetUserId(string username, string _connectionString)
+        {
+            UserProfileDTO userProfileDTO = _authenticationRepository.GetUserData(username, _connectionString);
+            return userProfileDTO.Id.ToString();
+        }
+
         public string Register(string username, string password, string passwordConfirmation, string _connectionString)
         {
             if (password == passwordConfirmation)

@@ -27,8 +27,51 @@ namespace Choreganizer_webapp.Controllers
             }
 
             int ownerId = int.Parse(HttpContext.Session.GetString("UserId"));
-            List<Project> projectsList = _projectService.GetProjects(ownerId, _connectionString);
-            return View(projectsList);
+            TempData["UserId"] = ownerId;
+            UserProjectViewData projectViewData = _projectService.GetViewData(ownerId);
+            return View(projectViewData);
+        }
+        
+        public IActionResult AddUser(int projectId)
+        {
+            return View(projectId);
+        }
+
+        public IActionResult InviteUser(int projectId, int userId)
+        {
+            ProjectInvitation projectInvitation = new ProjectInvitation()
+            {
+                projectId = projectId,
+                userId = userId
+            };
+            string message = _projectService.InviteUser(projectInvitation);
+            switch (message)
+            {
+                case "User does not exist":
+                    TempData["Error"] = "User does not exist";
+                    break;
+                case "User is already in the project":
+                    TempData["Error"] = "User is already in the project";
+                    break;
+                case "User is already invited":
+                    TempData["Error"] = "User is already invited";
+                    break;
+                case "User invited":
+                    TempData["Message"] = "User invited";
+                    return RedirectToAction("Index");
+            }
+            return RedirectToAction("AddUser");
+        }
+        public IActionResult AcceptInvite(int projectId)
+        {
+            _projectService.AcceptInvite(int.Parse(HttpContext.Session.GetString("UserId")), projectId);
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult DeclineInvite(int projectId)
+        {
+            _projectService.DeclineInvite(int.Parse(HttpContext.Session.GetString("UserId")), projectId);
+            return RedirectToAction("Index");
         }
 
         public IActionResult OpenProject(int projectId)
@@ -39,14 +82,14 @@ namespace Choreganizer_webapp.Controllers
 
         public IActionResult Remove(int projectId)
         {
-            _projectService.RemoveProject(projectId, _connectionString);
+            _projectService.RemoveProject(projectId);
             return RedirectToAction("Index");
         }
 
         public IActionResult Add(string projectName)
         {
             int userId = int.Parse(HttpContext.Session.GetString("UserId"));
-            string message = _projectService.AddProject(projectName, userId, _connectionString);
+            string message = _projectService.AddProject(projectName, userId);
             switch (message)
             {
                 case "Project name cannot be empty":

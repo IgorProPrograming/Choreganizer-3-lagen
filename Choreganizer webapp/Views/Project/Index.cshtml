@@ -1,11 +1,15 @@
 ﻿@using LOGIC
 @using LOGIC.Models
-@model List<Project>
+@model UserProjectViewData
+
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
+<h3>
+    @TempData["UserId"]
+</h3>
 
 <div>
     <div></div>
@@ -23,30 +27,63 @@
                 Last Edit
             </th>
         </tr>
-        @foreach (var m in Model)
-        {
+        
+            @foreach (var projects in Model.projects)
+            {
             <tr>
                 <th>
-                    @Html.ActionLink( @m.ProjectName, "OpenProject", new { projectId = @m.Id } )  
+                    @Html.ActionLink( projects.ProjectName, "OpenProject", new { projectId = @projects.Id } )  
                 </th>
                 <th>
-                    functionaliteit toevoegen
+                    @projects.OwnerId
                 </th>
                 <th>
                 <!--    m.LastEditDate -->
                 </th>
                 <th>
-                    @Html.ActionLink("Delete", "Remove", new { projectId = @m.Id })
+                    @Html.ActionLink("Delete", "Remove", new { projectId = @projects.Id })
                 </th>
                 <th>
-                    @Html.ActionLink("Add new user to project", "AddUser", new { projectId = @m.Id })
+                    @Html.ActionLink("Add new user to project", "AddUser", new { projectId = @projects.Id })
 			    </th>
             </tr>
         }
+        
     </table>
 
     <form method="post" asp-action="Add" asp-controller="Project">
         <input type="text" name="projectName" />
         <input type="submit" value="New Project" />
     </form>
+</div>
+<div>
+    <h1>Project invites</h1>
+    <table>
+        <tr>
+            <th>
+				Project
+			</th>
+			<th>
+				Accept?
+			</th>
+        </tr>
+        <tr>
+            @foreach (var invites in Model.invites)
+            {
+                <th>
+                    invites.projectName
+                </th>
+                <th>
+                    <form method="post" asp-action="AcceptInvite" asp-controller="Project">
+                        <input type="hidden" name="projectId" value="@invites.projectId" />
+                        <input type="submit" value="✔" />
+                    </form>
+                    <form method="post" asp-action="DeclineInvite" asp-controller="Project">
+                        <input type="hidden" name="projectId" value="@invites.projectId" />
+                        <input type="submit" value="X" />
+                    </form>
+                </th>
+            }
+        </tr>
+    </table>
 </div>

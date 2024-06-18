@@ -54,12 +54,13 @@ namespace Choreganizer_webapp.Controllers
             }
         }
 
-        public ActionResult Register(string username, string password, string passwordConfirmation)
+        public ActionResult RegisterUser(string username, string password, string passwordConfirmation)
         {
             string result = _authenticationService.Register(username, password, passwordConfirmation, _connectionString);
             if (result == "Registered successfully")
             {
-                HttpContext.Session.SetString("UserId", result);
+                string userId = _authenticationService.GetUserId(username, _connectionString);
+                HttpContext.Session.SetString("UserId", userId);
                 ViewBag.Message = "Login successful";
                 return RedirectToAction("Index", "Project");
             }
