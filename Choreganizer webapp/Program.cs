@@ -10,9 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
 
-builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<IProjectRepository, FakeProjectRepository>();
 builder.Services.AddScoped<IChoreRepository, ChoreRepository>();
-builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+builder.Services.AddScoped<IAuthenticationRepository, FakeAuthenticationRepository>();
 
 var app = builder.Build();
 

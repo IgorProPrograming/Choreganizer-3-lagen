@@ -5,7 +5,7 @@ using LOGIC.DTOs;
 
 namespace DAL
 {
-    public class AuthenticationRepository : IAuthenticationRepository
+    public class AuthenticationRepository// : IAuthenticationRepository
     {
         public UserProfileDTO GetUserData(string username, string _connectionString)
         {
